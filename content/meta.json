@@ -1,0 +1,40 @@
+[
+  {
+    "description": "Sweet innocent Tubby, trying to help out Flowey from getting wet in rain, unaware of the fact that she actually needs it!",
+    "image": "https://gateway.pinata.cloud/ipfs/QmZni5nQfKmQb6qJwMkU8dBFY9aYqsJBVCx6Nv2gxrLCEg",
+    "name": "Tubby helping Flowey",
+    "attributes": [
+      {
+        "trait_type": "Good intentions",
+        "value": "100"
+      },
+      {
+        "trait_type": "Cuteness",
+        "value": "70"
+      },
+      {
+        "trait_type": "Cookie capacity",
+        "value": "41"
+      }
+    ]
+  },
+  {
+    "description": "Fluffy blueish creature, trying to hug as usual",
+    "image": "https://gateway.pinata.cloud/ipfs/QmQkVMSWui5KH2Z1yiYJdfgQxPejw2eejYw5S2hZQ5htqK",
+    "name": "mo mind Hug",
+    "attributes": [
+      {
+        "trait_type": "Good intentions",
+        "value": "80"
+      },
+      {
+        "trait_type": "Cuteness",
+        "value": "95"
+      },
+      {
+        "trait_type": "Cookie capacity",
+        "value": "115"
+      }
+    ]
+  }
+]
