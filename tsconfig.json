@@ -32,6 +32,12 @@
       "@providers/*": [
         "components/providers/*"
       ],
+      "@hooks": [
+        "/components/hooks/"
+      ],
+      "@hooks/*": [
+        "components/providers/*"
+      ],
       "@_types": [
         "types/*"
       ]
