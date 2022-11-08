@@ -11,15 +11,23 @@ const Web3Provider: FunctionComponent<Props> = ({ children }) => {
 
     useEffect(() => {
         async function initWeb3() {
-            const provider = new ethers.providers.Web3Provider(window.ethereum as any);
-            const contract = await loadContract(provider);
+            try {
+                const provider = new ethers.providers.Web3Provider(window.ethereum as any);
+                const contract = await loadContract(provider);
 
-            setWeb3Api(createWeb3State({
-                ethereum: window.ethereum,
-                provider,
-                contract,
-                isLoading: false
-            }))
+                setWeb3Api(createWeb3State({
+                    ethereum: window.ethereum,
+                    provider,
+                    contract,
+                    isLoading: false
+                }))
+            } catch (e: any) {
+                console.error("Please, install web3 wallet");
+                setWeb3Api((api) => createWeb3State({
+                    ...api as any,
+                    isLoading: false,
+                }))
+            }
         }
 
         initWeb3();
