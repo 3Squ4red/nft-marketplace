@@ -139,30 +139,4 @@ describe("NFTMarket", () => {
       expect(acc1NFTs.length).to.be.equal(2);
     });
   });
-
-  describe("Burn token", () => {
-    const uri = "https://test-json-3.com";
-    before(async () => {
-      await nftmarket
-        .connect(accounts[2])
-        .mintToken(uri, nftPrice, { value: listingPrice });
-    });
-
-    it("accounts[2] should have 1 token", async () => {
-      const acc2NFTs = await nftmarket.connect(accounts[2]).getMyNFTs();
-      expect(acc2NFTs.length).to.be.equal(1);
-    });
-
-    it("can't burn someone else's NFT", async () => {
-      await expect(nftmarket.burnToken(2)).to.revertedWith(
-        "can't burn someone else's NFT"
-      );
-    });
-
-    it("accounts[2] should have 0 tokens after burning", async () => {
-      await nftmarket.connect(accounts[2]).burnToken(2);
-      const acc2NFTs = await nftmarket.connect(accounts[2]).getMyNFTs();
-      expect(acc2NFTs.length).to.be.equal(0);
-    });
-  });
 });

@@ -60,61 +60,40 @@ contract NFTMarket is ERC721URIStorage {
     }
 
     function buyNFT(uint tokenID) external payable {
-        // Get the price and the owner of this NFT
-        for (uint i = 0; i < NFTItems.length; i++) {
-            NFTItem storage nft = NFTItems[i];
-            if (nft.tokenID == tokenID) {
-                uint price = nft.price;
-                address previousOwner = ERC721.ownerOf(nft.tokenID);
-                bool isListed = nft.isListed;
+        NFTItem storage nft = NFTItems[tokenID];
 
-                // Check the owner
-                require(
-                    msg.sender != previousOwner,
-                    "You already own this NFT"
-                );
-                // Revert if this NFT is not listed
-                require(isListed, "can't purchase unlisted NFT");
-                // Check the sent amount
-                require(msg.value == price, "Insufficient purchase amount");
+        uint price = nft.price;
+        address previousOwner = ERC721.ownerOf(nft.tokenID);
+        bool isListed = nft.isListed;
 
-                // Delist the NFT from the market
-                nft.isListed = false;
-                listedItems.decrement();
+        // Check the owner
+        require(msg.sender != previousOwner, "You already own this NFT");
+        // Revert if this NFT is not listed
+        require(isListed, "can't purchase unlisted NFT");
+        // Check the sent amount
+        require(msg.value == price, "Insufficient purchase amount");
 
-                // Finally transfer the ownership of the NFT to msg.sender
-                // and pay the previous owner
-                _transfer(previousOwner, msg.sender, tokenID);
-                payable(previousOwner).transfer(msg.value);
+        // Delist the NFT from the market
+        nft.isListed = false;
+        listedItems.decrement();
 
-                break;
-            }
-        }
+        // Finally transfer the ownership of the NFT to msg.sender
+        // and pay the previous owner
+        _transfer(previousOwner, msg.sender, tokenID);
+        payable(previousOwner).transfer(msg.value);
     }
 
-    function burnToken(uint tokenID) external {
-        uint len = NFTItems.length;
-        // Search for the NFT
-        for (uint i = 0; i < len; i++) {
-            NFTItem memory nft = NFTItems[i];
-            if (nft.tokenID == tokenID) {
-                // Revert if msg.sender is not the owner of this NFT
-                require(
-                    ERC721.ownerOf(nft.tokenID) == msg.sender,
-                    "can't burn someone else's NFT"
-                );
-                // Make available the URI
-                delete URIexists[ERC721.tokenURI(nft.tokenID)];
-                // Decrease the listed token count by one
-                if (nft.isListed) listedItems.decrement();
-                // Replace the NFT with the last NFT
-                NFTItems[i] = NFTItems[len - 1];
-                // Remove the last NFT
-                NFTItems.pop();
-                break;
-            }
-        }
-        _burn(tokenID);
+    function placeNFTOnSale(uint tokenID, uint price) public payable {
+        require(ERC721.ownerOf(tokenID) == msg.sender, "caller is not owner");
+        require(msg.value == LISTING_PRICE, "must send listing price");
+
+        NFTItem storage nft = NFTItems[tokenID];
+
+        require(!nft.isListed, "already listed for sale");
+
+        nft.isListed = true;
+        nft.price = price;
+        listedItems.increment();
     }
 
     function getAllNFTsOnSale() external view returns (NFTItem[] memory) {
@@ -150,10 +129,12 @@ contract NFTMarket is ERC721URIStorage {
     }
 
     // Will be used to access an individual NFT Item
-    function getNFTItem(uint tokenID) external view returns (NFTItem memory nft) {
-        for (uint i = 0; i < NFTItems.length; i++) {
-            if (NFTItems[i].tokenID == tokenID) return NFTItems[i];
-        }
+    function getNFTItem(uint tokenID)
+        external
+        view
+        returns (NFTItem memory nft)
+    {
+        return NFTItems[tokenID];
     }
 
     // Returns the total no. of NFTs created/minted so far
