@@ -43,8 +43,9 @@ describe("NFTMarket", () => {
     });
 
     it("should create an NFT item for token 0", async () => {
-      const [price, creator, isListed] = await nftmarket.getNFTItemAt(0);
+      const [tokenID, price, creator, isListed] = await nftmarket.getNFTItem(0);
 
+      expect(tokenID).to.equal(0);
       expect(price).to.equal(nftPrice);
       expect(creator).to.equal(accounts[0].address);
       expect(isListed).to.equal(true);
@@ -61,8 +62,14 @@ describe("NFTMarket", () => {
       await nftmarket.connect(accounts[1]).buyNFT(0, { value: nftPrice });
     });
 
+    it("should not buy an unlisted NFT", async () => {
+      await expect(
+        nftmarket.connect(accounts[2]).buyNFT(0, { value: nftPrice })
+      ).to.be.revertedWith("can't purchase unlisted NFT");
+    });
+
     it("should unlist the NFT of id 0", async () => {
-      const nftItem = await nftmarket.getNFTItemAt(0);
+      const nftItem = await nftmarket.getNFTItem(0);
       expect(nftItem.isListed).to.be.equal(false);
     });
 
@@ -82,7 +89,7 @@ describe("NFTMarket", () => {
     const uri = "https://test-json-2.com";
     before(async () => {
       await nftmarket
-        .connect(accounts[1])
+        .connect(accounts[0])
         .mintToken(uri, nftPrice, { value: listingPrice });
     });
 
@@ -91,11 +98,71 @@ describe("NFTMarket", () => {
     });
 
     it("should retreive NFT by index", async () => {
-      const nft0 = await nftmarket.getNFTItemAt(0);
-      const nft1 = await nftmarket.getNFTItemAt(1);
+      await nftmarket.getNFTItem(0);
+      await nftmarket.getNFTItem(1);
+    });
 
-      expect(nft0.creator).to.be.equal(accounts[0].address);
-      expect(nft1.creator).to.be.equal(accounts[1].address);
+    it("should have listed one NFT only", async () => {
+      const nftsOnSale = await nftmarket.getAllNFTsOnSale();
+
+      expect(nftsOnSale[0].tokenID).to.be.equal(1);
+      expect(nftsOnSale.length).to.be.equal(1);
+    });
+
+    it("account[0] should have owned one NFT only", async () => {
+      const acc0NFTs = await nftmarket.connect(accounts[0]).getMyNFTs();
+
+      expect(acc0NFTs.length).to.be.equal(1);
+      expect(acc0NFTs[0].tokenID).to.be.equal(1);
+    });
+
+    it("account[1] should have owned one NFT only", async () => {
+      const acc1NFTs = await nftmarket.connect(accounts[1]).getMyNFTs();
+
+      expect(acc1NFTs.length).to.be.equal(1);
+      expect(acc1NFTs[0].tokenID).to.be.equal(0);
+    });
+  });
+
+  describe("Token transfer to new owner", () => {
+    before(async () => {
+      await nftmarket.transferFrom(accounts[0].address, accounts[1].address, 1);
+    });
+
+    it("accounts[0] should have 0 tokens", async () => {
+      const acc0NFTs = await nftmarket.connect(accounts[0]).getMyNFTs();
+      expect(acc0NFTs.length).to.be.equal(0);
+    });
+
+    it("accounts[1] should have 2 tokens", async () => {
+      const acc1NFTs = await nftmarket.connect(accounts[1]).getMyNFTs();
+      expect(acc1NFTs.length).to.be.equal(2);
+    });
+  });
+
+  describe("Burn token", () => {
+    const uri = "https://test-json-3.com";
+    before(async () => {
+      await nftmarket
+        .connect(accounts[2])
+        .mintToken(uri, nftPrice, { value: listingPrice });
+    });
+
+    it("accounts[2] should have 1 token", async () => {
+      const acc2NFTs = await nftmarket.connect(accounts[2]).getMyNFTs();
+      expect(acc2NFTs.length).to.be.equal(1);
+    });
+
+    it("can't burn someone else's NFT", async () => {
+      await expect(nftmarket.burnToken(2)).to.revertedWith(
+        "can't burn someone else's NFT"
+      );
+    });
+
+    it("accounts[2] should have 0 tokens after burning", async () => {
+      await nftmarket.connect(accounts[2]).burnToken(2);
+      const acc2NFTs = await nftmarket.connect(accounts[2]).getMyNFTs();
+      expect(acc2NFTs.length).to.be.equal(0);
     });
   });
 });
