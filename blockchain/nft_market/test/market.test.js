@@ -139,4 +139,27 @@ describe("NFTMarket", () => {
       expect(acc1NFTs.length).to.be.equal(2);
     });
   });
+
+  describe("List an NFT", () => {
+    before(async () => {
+      await nftmarket
+        .connect(accounts[1])
+        .placeNFTOnSale(0, 500, { value: listingPrice });
+    });
+
+    it("should have two listed items", async () => {
+      expect(await nftmarket.getListedItemsCount()).to.equal(2);
+    });
+
+    it("should not allow anyone else other than owner to change the listing price", async () => {
+      await expect(
+        nftmarket.connect(accounts[1]).setListingPrice(10)
+      ).to.be.revertedWith("Ownable: caller is not the owner");
+    });
+
+    it("should set new listing price", async () => {
+      await nftmarket.setListingPrice(10);
+      expect(await nftmarket.LISTING_PRICE()).to.equal(10);
+    });
+  });
 });

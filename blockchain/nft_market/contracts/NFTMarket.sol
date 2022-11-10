@@ -4,8 +4,9 @@ pragma solidity ^0.8.15;
 // Uncomment this line to use console.log
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract NFTMarket is ERC721URIStorage {
+contract NFTMarket is ERC721URIStorage, Ownable {
     struct NFTItem {
         uint tokenID;
         uint price;
@@ -19,10 +20,11 @@ contract NFTMarket is ERC721URIStorage {
     Counters.Counter private listedItems;
     Counters.Counter private tokenIds;
     // This is the price that every minter should pay for minting an NFT
-    uint public constant LISTING_PRICE = 0.025 ether;
+    uint public LISTING_PRICE = 0.025 ether;
     // Will be used to prevent NFT creation with same URIs
     mapping(string => bool) private URIexists;
     // Will be used to store all the NFTs
+    // The index at which an NFT is stored in this array, is it's `tokenID`
     NFTItem[] private NFTItems;
 
     constructor() ERC721("Cuties", "KYUT") {}
@@ -144,5 +146,10 @@ contract NFTMarket is ERC721URIStorage {
 
     function getListedItemsCount() external view returns (uint) {
         return listedItems.current();
+    }
+
+    function setListingPrice(uint newPrice) external onlyOwner {
+        require(newPrice > 0, "Price must be at least 1 wei");
+        LISTING_PRICE = newPrice;
     }
 }
