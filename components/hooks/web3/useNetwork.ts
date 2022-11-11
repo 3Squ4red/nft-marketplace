@@ -3,21 +3,21 @@ import useSWR from "swr";
 
 const NETWORKS: { [k: string]: string } = {
   1: "Ethereum Main Network",
-  3: "Ropsten Test Network",
-  4: "Rinkeby Test Network",
-  5: "Goerli Test Network",
-  42: "Kovan Test Network",
+  5: "Görli",
   56: "Binance Smart Chain",
   1337: "Ganache",
 };
 
 const targetId = process.env.NEXT_PUBLIC_TARGET_CHAIN_ID as string;
+console.log("Target ID:", targetId);
+
 const targetNetwork = NETWORKS[targetId];
 
 type UseNetworkResponse = {
   isLoading: boolean;
   isSupported: boolean;
   targetNetwork: string;
+  isConnectedToNetwork: boolean;
 };
 
 type NetworkHookFactory = CryptoHookFactory<string, UseNetworkResponse>;
@@ -43,12 +43,15 @@ export const hookFactory: NetworkHookFactory =
       }
     );
 
+    const isSupported = data == targetNetwork;
+
     return {
       ...swr,
       data,
       isValidating,
       targetNetwork,
-      isSupported: data === targetNetwork,
-      isLoading: isLoading as boolean
+      isSupported,
+      isConnectedToNetwork: !isLoading && isSupported,
+      isLoading: isLoading as boolean,
     };
   };

@@ -20,7 +20,7 @@ contract NFTMarket is ERC721URIStorage, Ownable {
     Counters.Counter private listedItems;
     Counters.Counter private tokenIds;
     // This is the price that every minter should pay for minting an NFT
-    uint public LISTING_PRICE = 0.025 ether;
+    uint public LISTING_PRICE = 0.00025 ether;
     // Will be used to prevent NFT creation with same URIs
     mapping(string => bool) private URIexists;
     // Will be used to store all the NFTs

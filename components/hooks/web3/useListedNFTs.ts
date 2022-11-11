@@ -2,6 +2,7 @@ import { CryptoHookFactory } from "../../../types/hooks";
 import { NFT } from "../../../types/nft";
 import useSWR from "swr";
 import { ethers } from "ethers";
+import { toast } from "react-toastify";
 
 type UseListedNftsResponse = {
   buyNFT: (token: number, value: number) => Promise<void>;
@@ -44,13 +45,18 @@ export const hookFactory: ListedNftsHookFactory =
           value: ethers.utils.parseEther(value.toString()),
         });
 
-        await result?.wait();
-
-        alert(
-          "Woohoo! You just bought an NFT! Check it out on your profile page."
-        );
+        await toast.promise(result!.wait(), {
+          pending: "Just a moment.. and you'll adopt him!",
+          success:
+            "Woohoo! You just adopted a cute creature 🥰 Check it out in your profile",
+          error: "Oops! Something went wrong. Please try again",
+        });
       } catch (e: any) {
         console.error(e.message);
+        if (e.data) {
+          toast.error(e.data.message);
+        } else
+          toast.error(e.message)
       }
     };
 

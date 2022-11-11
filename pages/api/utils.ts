@@ -6,7 +6,8 @@ import { NftMarketContract } from "../../types/nftMarketContract";
 import * as util from "ethereumjs-util";
 
 const abi = contract.abi;
-export const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string;
+export const contractAddress = process.env
+  .NEXT_PUBLIC_CONTRACT_ADDRESS as string;
 
 export const pinataApiKey = process.env.PINATA_API_KEY as string;
 export const pinataSecretApiKey = process.env.PINATA_SECRET_API_KEY as string;
@@ -21,15 +22,18 @@ export function withSession(handler: any) {
   });
 }
 
+const url =
+  process.env.NODE_ENV === "production"
+    ? process.env.INFURA_GOERLI_URL
+    : "http://127.0.0.1:8545";
+
 export const addressCheckMiddleware = async (
   req: NextApiRequest & { session: Session },
   res: NextApiResponse
 ) => {
   return new Promise(async (resolve, reject) => {
     const message = req.session.get("message-session");
-    const provider = new ethers.providers.JsonRpcProvider(
-      "http://127.0.0.1:8545"
-    );
+    const provider = new ethers.providers.JsonRpcProvider(url);
     const contract = new ethers.Contract(
       contractAddress,
       abi,

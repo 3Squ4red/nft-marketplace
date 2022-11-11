@@ -3,6 +3,7 @@ import { NFT } from "../../../types/nft";
 import { ethers } from "ethers";
 import useSWR from "swr";
 import { useCallback } from "react";
+import { toast } from "react-toastify";
 
 type UseOwnedNftsResponse = {
   listNft: (tokenId: number, price: number) => Promise<void>;
@@ -51,8 +52,12 @@ export const hookFactory: OwnedNftsHookFactory =
             }
           );
 
-          await result?.wait();
-          alert("You just disowned a cute creature!");
+          await toast.promise(result!.wait(), {
+            pending: "Listing your creature for adoption 😢",
+            success:
+              "Okay... now someone else could adopt him",
+            error: "Oops! Something went wrong. Please try again",
+          });
         } catch (e: any) {
           console.error(e.message);
         }
