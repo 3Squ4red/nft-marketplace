@@ -9,7 +9,6 @@ const NETWORKS: { [k: string]: string } = {
 };
 
 const targetId = process.env.NEXT_PUBLIC_TARGET_CHAIN_ID as string;
-console.log("Target ID:", targetId);
 
 const targetNetwork = NETWORKS[targetId];
 

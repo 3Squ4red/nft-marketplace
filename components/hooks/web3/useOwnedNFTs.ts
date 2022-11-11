@@ -48,14 +48,13 @@ export const hookFactory: OwnedNftsHookFactory =
             tokenId,
             ethers.utils.parseEther(price.toString()),
             {
-              value: ethers.utils.parseEther((0.025).toString()),
+              value: ethers.utils.parseEther((0.00025).toString()),
             }
           );
 
           await toast.promise(result!.wait(), {
             pending: "Listing your creature for adoption 😢",
-            success:
-              "Okay... now someone else could adopt him",
+            success: "Okay... now someone else could adopt him",
             error: "Oops! Something went wrong. Please try again",
           });
         } catch (e: any) {

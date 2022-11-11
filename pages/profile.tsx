@@ -27,6 +27,13 @@ const Profile: NextPage = () => {
         return () => setActiveNFT(undefined)
     }, [nfts.data])
 
+    const viewImage = () => {
+        window.open(
+            'https://google.com',
+            '_blank'
+        );
+    }
+
     return (
         <BaseLayout>
             <div className="h-full flex">
@@ -133,10 +140,11 @@ const Profile: NextPage = () => {
 
                                     <div className="flex">
                                         <button
+                                            onClick={viewImage}
                                             type="button"
                                             className="flex-1 bg-indigo-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                         >
-                                            Download Image
+                                            View Image
                                         </button>
                                         <button
                                             disabled={activeNFT.isListed}

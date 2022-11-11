@@ -53,10 +53,7 @@ export const hookFactory: ListedNftsHookFactory =
         });
       } catch (e: any) {
         console.error(e.message);
-        if (e.data) {
-          toast.error(e.data.message);
-        } else
-          toast.error(e.message)
+        toast.error(e.message);
       }
     };
 

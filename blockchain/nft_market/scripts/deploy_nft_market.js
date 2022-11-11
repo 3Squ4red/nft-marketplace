@@ -4,18 +4,10 @@ async function main() {
 
   await NFTMarket.deployed();
 
-  const accounts = await ethers.getSigners();
-
   NFTMarket.mintToken(
     "https://gateway.pinata.cloud/ipfs/QmWMyXSs3QbsXkfC18p5CjEfv5RVT6QBd5DHz4U92QiEDs",
     "500000000000000000",
-    { value: "250000000000000", gasLimit: 1100000 }
-  );
-
-  NFTMarket.mintToken(
-    "https://gateway.pinata.cloud/ipfs/QmTevS6y9HHzZAgkmY24gDrZamJj6sygzGYbknBY3fPtt9",
-    "300000000000000000",
-    { value: "250000000000000", gasLimit: 1100000 }
+    { value: "250000000000000", gasLimit: 1199999 }
   );
 
   console.log(`NFTMarket deployed to ${NFTMarket.address}`);
