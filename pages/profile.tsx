@@ -29,7 +29,7 @@ const Profile: NextPage = () => {
 
     const viewImage = () => {
         window.open(
-            'https://google.com',
+            activeNFT?.meta.image,
             '_blank'
         );
     }
