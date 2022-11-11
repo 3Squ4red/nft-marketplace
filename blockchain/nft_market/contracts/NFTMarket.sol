@@ -49,8 +49,7 @@ contract NFTMarket is ERC721URIStorage, Ownable {
 
         _safeMint(msg.sender, newTokenId);
         _setTokenURI(newTokenId, tokenURI);
-        // A newly minted NFT will also be immediately listed
-        NFTItems.push(NFTItem(newTokenId, price, msg.sender, true));
+        NFTItems.push(NFTItem(newTokenId, price, msg.sender, false));
 
         emit NFTCreated(newTokenId, price, msg.sender, true);
 
