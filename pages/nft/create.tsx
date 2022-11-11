@@ -122,6 +122,7 @@ const NFTCreate: NextPage = () => {
             setNftURI(`${process.env.NEXT_PUBLIC_PINATA_DOMAIN}/ipfs/${data.IpfsHash}`);
         } catch (e: any) {
             console.error(e.message);
+            toast.error(e.message);
         }
     }
 
@@ -146,11 +147,12 @@ const NFTCreate: NextPage = () => {
             await toast.promise(
                 tx!.wait(), {
                 pending: "Creating a cutie! Hold on tight...",
-                success: "You just minted a new Cutiee! Here's a hug 🤗",
+                success: "You just minted a new Cutiee! Check him out in your profile 🤗",
                 error: "Oops! Something went wrong. Please try again"
             })
         } catch (e: any) {
             console.error(e.message);
+            toast.error(e.message);
         }
     }
 
