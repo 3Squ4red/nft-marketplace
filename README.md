@@ -8,7 +8,7 @@ Here, you'd find heart-warming creatures who are available for adoption. Check t
 2. Create and upload your very own cuties!
 3. List them for further adoption (they may get a little sad about this)
 4. You can view and download any of the creatures, **BUT** that won't take away their authenticity
-5. Get directly paid when someone buy's your NFT
+5. Get directly paid when someone buys your NFT
 
 ## Demo 🚀
 ---
