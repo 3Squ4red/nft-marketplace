@@ -1,9 +1,7 @@
 # NFT Marketplace
----
 Here, you'd find heart-warming creatures who are available for adoption. Check them out, adopt them or bettery yet, create one of your own!
 
 ## Features
----
 1. Clean UI
 2. Create and upload your very own cuties!
 3. List them for further adoption (they may get a little sad about this)
@@ -11,7 +9,6 @@ Here, you'd find heart-warming creatures who are available for adoption. Check t
 5. Get directly paid when someone buys your NFT
 
 ## Demo 🚀
----
 Visit [here](https://nft-marketplace-bytecode-velocity.vercel.app/) and view the contract [here](https://goerli.etherscan.io/address/0x51cf26d73578bce0699aebdd9f3a2d4997ba6144)
 
 ## Tech Stack
